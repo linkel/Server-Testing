@@ -15,7 +15,7 @@ describe('guns model', () => {
       expect(guns).toHaveLength(2);
     });
 
-    it('should insert the provided gun into the db', async () => {
+    it('should return correct gun name per insert', async () => {
       let gun = await Guns.insert({ name: 'FN P90', type: 'SMG' });
       expect(gun.name).toBe('FN P90');
 
@@ -23,4 +23,20 @@ describe('guns model', () => {
       expect(gun.name).toBe('AK-12');
     });
   });
+  describe('remove()', () => {
+    afterEach(async () => {
+      await db('guns').truncate();
+    });
+    it('should fail to remove if there is nothing to remove', async () => {
+      await Guns.insert({ name: 'FN P90', type: 'SMG' });
+      const result = await Guns.remove(3);
+      expect(result).toBe(0);
+    })
+    it('should return id if successfully removed', async () => {
+      await Guns.insert({ name: 'FN P90', type: 'SMG' });
+      await Guns.insert({ name: 'P90', type: 'SMG' });
+      const result = await Guns.remove(1);
+      expect(result).toBe(1);
+    })
+  })
 });

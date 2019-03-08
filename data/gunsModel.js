@@ -17,11 +17,19 @@ async function insert(gun) {
 }
 
 async function update(id, changes) {
-  return null;
+  await db('guns').update(changes).where('id', id)
+  return changes;
 }
 
-function remove(id) {
-  return null;
+async function remove(id) {
+  let find = await findById(id)
+  console.log(find)
+  if (find.length !== 0) {
+    await db('guns').delete().where('id',id)
+    return id;
+  } else {
+    return 0
+  }
 }
 
 function getAll() {
@@ -29,5 +37,5 @@ function getAll() {
 }
 
 function findById(id) {
-  return null;
+  return db('guns').where('id',id);
 }
